@@ -16,6 +16,16 @@
 #include <motion.h>
 #include <libdbg.h>
 #include <libsmart.h>
+
+
+
+//Bullet Includes
+#include "btBulletDynamicsCommon.h"
+
+
+//Include GameObjectPhysics
+#include "build\vs2017\PhysicsGameObject.h"
+
 // FRAMEWORK FORWARD DECLARATIONS
 namespace gef
 {
@@ -37,6 +47,7 @@ class ARApp : public gef::Application
 public:
 	ARApp(gef::Platform& platform);
 	void Init();
+	void InitPhysics();
 	void CleanUp();
 	bool Update(float frame_time);
 	void Render();
@@ -80,6 +91,22 @@ private:
 
 	bool isMarkerFound;
 	bool areBoxesColliding;
+
+	PhysicsGameObject PhysicalCube;
+
+	///////Bullet Engine Init
+	btDefaultCollisionConfiguration* collisionConfiguration;
+	btCollisionDispatcher* dispatcher;
+	btDbvtBroadphase* overlappingPairCache;
+	btSequentialImpulseConstraintSolver* solver;
+	btDiscreteDynamicsWorld* dynamicsWorld;
+
+
+
+
+
+
+
 };
 
 

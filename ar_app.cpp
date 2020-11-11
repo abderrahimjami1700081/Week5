@@ -83,8 +83,35 @@ void ARApp::Init()
 	Cube_GameObject.position_ = gef::Vector4(.3f, 0.0f, 0.0f);
 	
 
+	// Bullet setup
+	///-----initialization_start-----
+	InitPhysics();
+
+	//Initiate PhisicalCube
+	PhysicalCube.set_mesh(primitive_builder_->CreateBoxMesh(gef::Vector4(.015f, .015f, .015f), gef::Vector4(0.0f, 0.0f, 0.0f)));
+	dynamicsWorld->addRigidBody(PhysicalCube.GetBody());
+
 
 	areBoxesColliding = false;
+}
+
+void ARApp::InitPhysics()
+{
+
+	///collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
+	collisionConfiguration = new btDefaultCollisionConfiguration();
+
+	///use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
+	dispatcher = new btCollisionDispatcher(collisionConfiguration);
+
+	///btDbvtBroadphase is a good general purpose broadphase. You can also try out btAxis3Sweep.
+	overlappingPairCache = new btDbvtBroadphase();
+
+	///the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
+	solver = new btSequentialImpulseConstraintSolver;
+	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+	dynamicsWorld->setGravity(btVector3(0, 0.0f, -0.7f));
+	///-----initialization_end-----
 }
 
 void ARApp::CleanUp()
@@ -104,6 +131,24 @@ void ARApp::CleanUp()
 
 	delete input_manager_;
 	input_manager_ = NULL;
+
+
+	delete dynamicsWorld;
+	dynamicsWorld = NULL;
+
+	delete solver;
+	solver = NULL;
+
+	delete collisionConfiguration;
+	collisionConfiguration = NULL;
+
+	delete dispatcher;
+	dispatcher = NULL;
+
+	delete overlappingPairCache;
+	overlappingPairCache = NULL;
+
+
 }
 
 bool ARApp::Update(float frame_time)
@@ -234,7 +279,7 @@ bool ARApp::Update(float frame_time)
 
 	}
 
-
+	dynamicsWorld->stepSimulation(frame_time);
 
 
 	sampleUpdateEnd(dat);
@@ -347,6 +392,8 @@ void ARApp::DrawHUD()
 		{
 			font_->RenderText(sprite_renderer_, gef::Vector4(700.0f, 410.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "The boxes are colliding");
 		}
+
+		font_->RenderText(sprite_renderer_, gef::Vector4(750.0f, 310.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "CubePos: %.1f", PhysicalCube.GetBody()->getWorldTransform().getOrigin().getY());
 
 	}
 }
