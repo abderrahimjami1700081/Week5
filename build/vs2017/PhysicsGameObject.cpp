@@ -13,7 +13,7 @@ PhysicsGameObject::~PhysicsGameObject()
 {
 }
 
-void PhysicsGameObject::CreateShapeWithVertices(const gef::Mesh::Vertex * vertices, const UInt32 num_vertices, bool isConvex)
+void PhysicsGameObject::CreateShapeWithVertices(const gef::VertexBuffer vertexBuffer, const UInt32 num_vertices, bool isConvex)
 {
 	if (isConvex)
 	{
