@@ -1,10 +1,11 @@
 #include "PhysicsGameObject.h"
+#include <graphics/vertex_buffer.h>
 
 
 PhysicsGameObject::PhysicsGameObject()
 {
 
-	//Init();
+	Init();
 
 }
 
@@ -13,14 +14,17 @@ PhysicsGameObject::~PhysicsGameObject()
 {
 }
 
-void PhysicsGameObject::CreateShapeWithVertices(const gef::VertexBuffer vertexBuffer, const UInt32 num_vertices, bool isConvex)
+void PhysicsGameObject::CreateShapeWithVertices(void* vertices, const UInt32 num_vertices, bool isConvex)
 {
+	gef::Mesh::Vertex* vertexPtr = (gef::Mesh::Vertex*)vertices;
+
+
 	if (isConvex)
 	{
 		shape = new btConvexHullShape();
 		for (int i = 0; i < num_vertices; i++)
 		{
-			gef::Mesh::Vertex v = vertices[i];
+			gef::Mesh::Vertex v = vertexPtr[i];
 			btVector3 btv = btVector3(v.px, v.py, v.pz);
 			((btConvexHullShape*)shape)->addPoint(btv);
 		}
@@ -31,9 +35,9 @@ void PhysicsGameObject::CreateShapeWithVertices(const gef::VertexBuffer vertexBu
 		btTriangleMesh* mesh = new btTriangleMesh();
 		for (int i = 0; i < num_vertices; i+=3)
 		{
-			gef::Mesh::Vertex v1 = vertices[i];
-			gef::Mesh::Vertex v2 = vertices[i+1];
-			gef::Mesh::Vertex v3 = vertices[i+2];
+			gef::Mesh::Vertex v1 = vertexPtr[i];
+			gef::Mesh::Vertex v2 = vertexPtr[i+1];
+			gef::Mesh::Vertex v3 = vertexPtr[i+2];
 
 			btVector3 bv1 = btVector3(v1.px, v1.py, v1.pz);
 			btVector3 bv2 = btVector3(v2.px, v2.py, v2.pz);
@@ -80,8 +84,8 @@ void PhysicsGameObject::Init()
 {
 
 
-
-	CreateShapeWithVertices(mesh()->GetVertices(), mesh()->GetNumVertices(), true);
+	gef::Mesh* meshPtr = (gef::Mesh*)mesh();
+	CreateShapeWithVertices(meshPtr->vertex_buffer()->vertex_data(), mesh()->GetNumVertices(), true);
 	CreateBodyWithMass(1.f);
 
 }

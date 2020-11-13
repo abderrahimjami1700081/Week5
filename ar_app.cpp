@@ -393,7 +393,7 @@ void ARApp::DrawHUD()
 			font_->RenderText(sprite_renderer_, gef::Vector4(700.0f, 410.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "The boxes are colliding");
 		}
 
-		font_->RenderText(sprite_renderer_, gef::Vector4(750.0f, 310.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "CubePos: %.1f", PhysicalCube.GetBody()->getWorldTransform().getOrigin().getY());
+		//font_->RenderText(sprite_renderer_, gef::Vector4(750.0f, 310.0f, -0.9f), 1.0f, 0xffffffff, gef::TJ_LEFT, "CubePos: %.1f", PhysicalCube.GetBody()->getWorldTransform().getOrigin().getY());
 
 	}
 }

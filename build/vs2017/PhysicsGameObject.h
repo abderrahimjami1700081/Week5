@@ -3,6 +3,7 @@
 
 #include "btBulletDynamicsCommon.h"
 #include <graphics/mesh.h>
+class gef::VertexBuffer;
 class PhysicsGameObject :
 	public GameObject
 {
@@ -10,7 +11,7 @@ public:
 	PhysicsGameObject();
 	~PhysicsGameObject();
 
-	void CreateShapeWithVertices(const gef::Mesh::Vertex * vertices, const UInt32 num_vertices, bool isConvex);
+	void CreateShapeWithVertices(void* vertices, const UInt32 num_vertices, bool isConvex);
 	void CreateBodyWithMass(float mass_);
 	void Init();
 	void CleanUpPhysics();
